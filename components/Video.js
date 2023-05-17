@@ -293,6 +293,26 @@ class Video extends Component {
     return this.onSeekRelease(percent)
   }
 
+  /**
+   * This is a custom method to seek to a specific time in the video.
+   * customSeekTo (route.params.progressTime, e.duration)
+   */
+  customSeekTo(seconds, duration) {
+    const percent = seconds / duration
+    if (seconds > duration) {
+      throw new Error(`Current time (${seconds}) exceeded the duration ${duration}`)
+      return false
+    }
+    return this.onCustomSeekRelease(percent, duration)
+  }
+
+  onCustomSeekRelease(percent, duration) {
+    const seconds = percent * duration
+    this.setState({ progress: percent, seeking: false }, () => {
+      this.player.seek(seconds)
+    })
+  }
+
   progress(time) {
     const { currentTime } = time
     const progress = currentTime / this.state.duration
